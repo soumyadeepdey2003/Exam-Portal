@@ -80,11 +80,7 @@ public class QuestionService {
             throw new IllegalArgumentException("The question with id " + id + " does not exist");
         });
         questionRepository.delete(questionModel);
-        if(questionModel==null) {
-            return CompletableFuture.completedFuture("SUCCESS");
-        } else {
-            throw new IllegalArgumentException("Internal Server Error, Refresh your page");
-        }
+        return CompletableFuture.completedFuture("Question deleted successfully");
     }
 
     /*

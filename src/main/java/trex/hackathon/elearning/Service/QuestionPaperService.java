@@ -48,14 +48,16 @@ public class QuestionPaperService {
 
         Optional<QuestionPaperModel> updatedQuestion = questionPaperRepository.findById(id);
 
-        if(!updatedQuestion.isEmpty()) {
+        if(!updatedQuestion.isPresent()) {
+            throw new IllegalArgumentException("The number of questions must be greater than the number of Questions available for the bank");
+        } else {
             updatedQuestion.get().setName(questionPaperModel.getName());
             updatedQuestion.get().setDescription(questionPaperModel.getDescription());
             updatedQuestion.get().setFullMarks(questionPaperModel.getFullMarks());
             updatedQuestion.get().setTotalQuestions(questionPaperModel.getTotalQuestions());
 
             if(updatedQuestion.get().getQuestions().size() < updatedQuestion.get().getTotalQuestions()) {
-                throw new IllegalArgumentException("The number of questions must be greater than the number of Questions available for the bank");
+                throw new IllegalArgumentException("The question paper with id " + id + " does not exst");
             }
 
             List<QuestionModel> values = new ArrayList<>();
@@ -66,8 +68,6 @@ public class QuestionPaperService {
             updatedQuestion.get().setQuestions(values);
             // saving the question paper
             return CompletableFuture.completedFuture(questionPaperRepository.save(updatedQuestion.get()));
-        } else {
-            throw new IllegalArgumentException("The question paper with id " + id + " does not exist");
         }
     }
 
@@ -80,11 +80,7 @@ public class QuestionPaperService {
             throw new IllegalArgumentException("The question paper with id " + id + " does not exist");
         });
         questionPaperRepository.delete(questionPaperModel);
-        if(questionPaperModel==null) {
-            return CompletableFuture.completedFuture("SUCCESS");
-        } else {
-            throw new IllegalArgumentException("Internal Server Error, Refresh your page");
-        }
+        return CompletableFuture.completedFuture("Question Paper deleted successfully");
     }
 
     /*

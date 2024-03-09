@@ -46,7 +46,6 @@ public class QuestionController {
     @PutMapping(value = "/question/{id}")
     public CompletableFuture<ResponseEntity<?>> updateQuestion (
             @RequestBody QuestionModel question,
-
             @PathVariable Long id
     ) throws Exception {
         return questionService.updateQuestion(question, id).thenApply( q -> {
